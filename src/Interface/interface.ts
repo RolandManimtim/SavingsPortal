@@ -5,6 +5,7 @@ amount: number | string;
 status: "Unpaid"| "Ongoing" | "Paid" | "Overdue" ;
 address: string;
 contact: string;
+transactionNumber: string;
 }
 
 // Payload for creating a borrower, includes createdBy

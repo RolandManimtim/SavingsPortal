@@ -10,7 +10,7 @@ import {
   Avatar,
   Alert,
 } from "@mui/material";
-import { PiggyBank, DollarSign, Landmark, PhilippinePeso } from "lucide-react";
+import { PiggyBank, Landmark, PhilippinePeso } from "lucide-react";
 import { motion } from "framer-motion";
 import { loginUser } from "./Login";
 import LoadingScreen from "../../Component/Loading";
