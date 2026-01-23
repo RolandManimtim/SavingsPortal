@@ -1,5 +1,5 @@
 import React  from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import MoneyLoginPage from "./Page/LoginPage/LoginPage";
 import Dashboard from "./Page/DashBoard/Dashboard";
 import AddBorrowerPage from "./Page/Borrowers/AddBorrowers";
@@ -12,28 +12,10 @@ const App: React.FC = () => {
    
     <Routes>
       {/* Login route */}
-      <Route
-        path="/"
-        element={
-          true ? (
-            <Navigate to="/dashboard" replace />
-          ) : (
-            <MoneyLoginPage />
-          )
-        }
-      />
+        <Route path="/" element={<MoneyLoginPage />} />
 
       {/* Dashboard route */}
-      <Route
-        path="/dashboard"
-        element={
-          !true ? (
-            <Dashboard  />
-          ) : (
-            <Navigate to="/" replace />
-          )
-        }
-      />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route
       path="/addBorrowers"
       element={<AddBorrowerPage/>}/>
