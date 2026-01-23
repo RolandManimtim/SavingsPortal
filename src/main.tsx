@@ -3,16 +3,16 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "./ThemeProvider";
-import { BrowserRouter } from "react-router-dom";
+import {  HashRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     
     <ThemeProvider theme={theme}>
       <CssBaseline />
-       <BrowserRouter basename="/SavingsPortal">
+      <HashRouter>
       <App />
-    </BrowserRouter>
+   </HashRouter>
     </ThemeProvider>
   </React.StrictMode>
 );
