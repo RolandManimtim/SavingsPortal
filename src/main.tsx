@@ -7,9 +7,10 @@ import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+    
     <ThemeProvider theme={theme}>
       <CssBaseline />
-        <BrowserRouter>
+       <BrowserRouter basename="/SavingsPortal">
       <App />
     </BrowserRouter>
     </ThemeProvider>

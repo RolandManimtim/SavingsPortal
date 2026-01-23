@@ -9,12 +9,13 @@ import BorrowerDetailPage from "./Page/Borrowers/BorrowerDetailPage";
 const App: React.FC = () => {
 
   return (
+   
     <Routes>
       {/* Login route */}
       <Route
         path="/"
         element={
-          false ? (
+          true ? (
             <Navigate to="/dashboard" replace />
           ) : (
             <MoneyLoginPage />
@@ -26,7 +27,7 @@ const App: React.FC = () => {
       <Route
         path="/dashboard"
         element={
-          !false ? (
+          !true ? (
             <Dashboard  />
           ) : (
             <Navigate to="/" replace />
@@ -43,6 +44,7 @@ const App: React.FC = () => {
       path="/borrowersDetails"
       element={<BorrowerDetailPage/>}/>
     </Routes>
+   
   );
 };
 
