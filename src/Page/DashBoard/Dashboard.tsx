@@ -1,16 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Paper,
   Typography,
   Stack,
   Avatar,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Menu,
-  MenuItem,
-  Button,
 } from "@mui/material";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import {
@@ -22,7 +16,6 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Logout } from "@mui/icons-material";
 import DashboardLayout from "./DashboardLayout";
 
 const data = [

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React  from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import MoneyLoginPage from "./Page/LoginPage/LoginPage";
 import Dashboard from "./Page/DashBoard/Dashboard";
@@ -7,8 +7,6 @@ import BorrowersListPage from "./Page/Borrowers/BorrowersList";
 import BorrowerDetailPage from "./Page/Borrowers/BorrowerDetailPage";
 
 const App: React.FC = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [userName, setUserName] = useState("Roland"); // optional dummy user
 
   return (
     <Routes>
@@ -16,7 +14,7 @@ const App: React.FC = () => {
       <Route
         path="/"
         element={
-          loggedIn ? (
+          false ? (
             <Navigate to="/dashboard" replace />
           ) : (
             <MoneyLoginPage />
@@ -28,7 +26,7 @@ const App: React.FC = () => {
       <Route
         path="/dashboard"
         element={
-          !loggedIn ? (
+          !false ? (
             <Dashboard  />
           ) : (
             <Navigate to="/" replace />
