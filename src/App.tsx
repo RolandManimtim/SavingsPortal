@@ -12,18 +12,18 @@ const App: React.FC = () => {
    
     <Routes>
       {/* Login route */}
-        <Route path="/" element={<MoneyLoginPage />} />
+        <Route path="" element={<MoneyLoginPage />} />
 
       {/* Dashboard route */}
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="dashboard" element={<Dashboard />} />
       <Route
-      path="/addBorrowers"
+      path="addBorrowers"
       element={<AddBorrowerPage/>}/>
       <Route
-      path="/borrowersList"
+      path="borrowersList"
       element={<BorrowersListPage/>}/>
       <Route
-      path="/borrowersDetails"
+      path="borrowersDetails"
       element={<BorrowerDetailPage/>}/>
     </Routes>
    
