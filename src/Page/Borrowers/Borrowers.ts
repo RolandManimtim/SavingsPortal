@@ -1,8 +1,8 @@
 import type { Borrower, CreateBorrowerPayload } from "../../Interface/interface";
 
 // src/services/borrowersService.ts
-const API_BASE_URL = "https://localhost:7263";
-
+//const API_BASE_URL = "https://localhost:7263";https://rbmanimtim.bsite.net/
+const API_BASE_URL = "https://rbmanimtim.bsite.net/";
 
 export const getBorrowers = async (page = 1, pageSize = 10) => {
   try {
