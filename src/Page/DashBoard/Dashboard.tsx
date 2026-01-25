@@ -32,7 +32,7 @@ const data = [
 
 
 
-const usersName = localStorage.getItem("userName") || "";
+const MyusersName = localStorage.getItem("userName") || "";
 const Dashboard: React.FC = () => {
   // const API_BASE_URL = "https://localhost:44365";
   const API_BASE_URL = "https://rbmanimtim.bsite.net"
@@ -79,7 +79,7 @@ const [dashboardDetails, setDashboardDetails] = useState<DashboardEtails>({
   const [hoveredLol, setHoveredLol] = useState(false);
   const [hoveredInt, setHoveredInt] = useState(false);
   return (
-     <DashboardLayout userName={usersName}  >
+     <DashboardLayout userName={MyusersName}  >
 {loading && <LoadingScreen message="Dashboard Loading. Please wait..." />}
       {/* Main content */}
       <Box sx={{ p: 4 }}>

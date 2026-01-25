@@ -20,7 +20,8 @@ interface DashboardLayoutProps {
 
 const menuItems = ["Dashboard", "Cash Flow", "Money Lending", "Reports"];
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ userName, children }) => {
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({  children }) => {
+  const MyusersName = localStorage.getItem("userName") || "";
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
@@ -102,7 +103,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ userName, children })
 
           {/* User info / logout */}
           <Stack direction="row" alignItems="center" spacing={1}>
-            <Typography variant="body1">{userName}</Typography>
+            <Typography variant="body1">{MyusersName}</Typography>
             <IconButton onClick={handleLogout} color="inherit">
               <Logout />
             </IconButton>
