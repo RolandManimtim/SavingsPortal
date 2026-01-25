@@ -260,7 +260,7 @@ const handleCompute = (value :string) => {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={7} align="center">
+                      <TableCell colSpan={9} align="center">
                         No borrowers found.
                       </TableCell>
                     </TableRow>
