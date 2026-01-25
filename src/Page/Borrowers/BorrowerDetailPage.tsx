@@ -26,7 +26,7 @@ import Swal from "sweetalert2";
 
 const BorrowerDetailPage: React.FC = () => {
   const { transactionNo } = useParams<{ transactionNo: string }>();
-  // const API_BASE_URL = "https://localhost:44365";
+   //const API_BASE_URL = "https://localhost:44365";
   const API_BASE_URL = "https://rbmanimtim.bsite.net"
  const [borrowerData, setBorrowerData] = useState<BorrowerData>({
   borrowerName: "",
@@ -94,6 +94,7 @@ const handlePaymentChange = (
   field: keyof BorrowerDetails,
   value: string
 ) => {
+  console.log(value,id, "date")
   setBorrowerData(prev => ({
     ...prev,
     borrowerDetails: prev.borrowerDetails.map(detail =>
@@ -142,14 +143,29 @@ useEffect(() => {
   }, [borrowerData]);
 
   // Helper to format date for type="date" inputs
-  const formatDateForInput = (dateStr?: string) => {
+ const formatDateForInput = (dateStr?: string) => {
+  console.log(dateStr, "test date");
+  if (!dateStr) return "";
+
+  // Split MM/dd/yy
+  const parts = dateStr.split("/");
+  if (parts.length !== 3) return "";
+
+  let [month, day, year] = parts.map(Number);
+  if (year < 100) year += 2000; // convert 2-digit year to 20xx
+
+  // Format as yyyy-MM-dd
+  const mm = String(month).padStart(2, "0");
+  const dd = String(day).padStart(2, "0");
+  return `${year}-${mm}-${dd}`;
+};
+
+const formatDateForInput1 = (dateStr?: string) => {
     if (!dateStr) return "";
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return "";
     return d.toISOString().split("T")[0];
   };
-
-
   const handleUpdate = async () => {
     try{
       setSaving(true)
@@ -251,7 +267,7 @@ const handleBackClick = () => {
               disabled={borrowerData.status ==="Paid"}
                 label="Borrowed Date"
                 type="date"
-                value={formatDateForInput(borrowerData?.borrowedDate)}
+                value={formatDateForInput1(borrowerData?.borrowedDate)}
                 onChange={(e) => handleBorrowerChange("borrowedDate", e.target.value)}
                 InputLabelProps={{ shrink: true }}
                 fullWidth
@@ -385,7 +401,7 @@ const handleBackClick = () => {
                     <TextField
                     disabled
                       type="date"
-                      value={formatDateForInput(p.schedulePaymentDate)}
+                         value={formatDateForInput(p.schedulePaymentDate)}
                       //onChange={(e) => handlePaymentChange(p.id, "schedulePaymentDate", e.target.value)}
                       size="small"
                       fullWidth
@@ -410,7 +426,7 @@ const handleBackClick = () => {
                     <TextField
                      disabled = {p.status === "Paid" || borrowerData.status === "Paid"}
                       type="date"
-                      value={formatDateForInput(p.actualDatePaid)}
+                      value={formatDateForInput1(p.actualDatePaid)}
                       onChange={(e) => handlePaymentChange(p.id, "actualDatePaid", e.target.value)}
                       size="small"
                       fullWidth
