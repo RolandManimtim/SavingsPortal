@@ -28,10 +28,10 @@ import { createBorrower } from "./Borrowers";
 import LoadingScreen from "../../Component/Loading";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE_URL = "https://localhost:7263";
+// const API_BASE_URL = "https://localhost:44365";
 
 // Define type for borrower
-
+const API_BASE_URL = "https://rbmanimtim.bsite.net"
 
 const BorrowersListPage: React.FC = () => {
   const [borrowersData, setBorrowersData] = useState<Borrower[]>([]);
@@ -59,11 +59,12 @@ const [pagination, setPagination] = useState<Pagination>({
   const [newBorrower, setNewBorrower] = useState<Borrower>({
     name: "",
     borrowedDate: "",
-    amount: "",
+    amount: 0,
     status: "Unpaid",
     address: "",
     contact: "",
-    transactionNumber:""
+    transactionNumber:"",
+    interestAmount:""
   });
 
   // Fetch borrowers from API
@@ -124,12 +125,12 @@ try {
     setSaving(true);
 // Call backend API
 const response = await createBorrower(newBorrower);
- console.log(response, "save")
+ console.log(response, newBorrower,"save")
 // Update local state
 setBorrowersData([...borrowersData, newBorrower]);
 
 // Reset form and close modal
-setNewBorrower({ name: "", borrowedDate: "", amount: "", status: "Unpaid", address: "", contact: "",transactionNumber:"" });
+setNewBorrower({ name: "", borrowedDate: "", amount: 0, status: "Unpaid", address: "", contact: "",transactionNumber:"", interestAmount:0 });
 
 
 fetchBorrowers()
@@ -142,10 +143,24 @@ finally{
 }
 };
   const navigate = useNavigate();
- const handleEditClick = () => {
+ const handleEditClick = (transactionNo: string) => {
     
-   navigate("/borrowersDetails");
-    // Money Lending main click could also navigate if needed
+   navigate(`/borrowersDetails/${transactionNo}`);
+  };
+
+
+const handleCompute = (value :string) => {
+    
+  const interestAmount = Number(value) * 0.20;
+  newBorrower.interestAmount = interestAmount.toString();
+  setNewBorrower({ ...newBorrower, amount: value, interestAmount: interestAmount.toString() })
+
+  console.log(newBorrower, interestAmount, "onchange");
+  };
+
+    const handleViewClick = () => {
+    
+   navigate(`/dashboard`);
   };
 
   return (
@@ -158,9 +173,16 @@ finally{
             <Typography variant="h5" fontWeight={700} color="#4caf50">
               Borrowers
             </Typography>
-            <Button variant="contained" color="success" sx={{ borderRadius: 2, textTransform: "none" }} onClick={handleModalOpen}>
+            <Box>
+              <Button 
+                       onClick={() => handleViewClick()}
+                     variant="contained"  sx={{ borderRadius: 2, textTransform: "none", backgroundColor:"white", color:"black" }} >
+                                   Back
+                                 </Button>
+            <Button variant="contained" color="success" sx={{ borderRadius: 2, textTransform: "none", ml:2}} onClick={handleModalOpen}>
               + Add Borrower
             </Button>
+            </Box>
           </Stack>
 
           {/* Filter Section */}
@@ -186,10 +208,11 @@ finally{
               <Table>
                 <TableHead>
                   <TableRow sx={{ backgroundColor: "#f0fdf4" }}>
-                    <TableCell sx={{ fontWeight: 700 }}>Tramsaction Number</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Transaction Number</TableCell>
                     <TableCell sx={{ fontWeight: 700 }}>Borrower Name</TableCell>
                     <TableCell sx={{ fontWeight: 700 }}>Borrowed Date</TableCell>
-                    <TableCell sx={{ fontWeight: 700 }}>Amount</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Borrowed Amount</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Interest Amount</TableCell>
                     <TableCell sx={{ fontWeight: 700 }}>Status</TableCell>
                     <TableCell sx={{ fontWeight: 700 }}>Address</TableCell>
                     <TableCell sx={{ fontWeight: 700 }}>Contact</TableCell>
@@ -212,21 +235,22 @@ finally{
                         <TableCell>{b.transactionNumber}</TableCell>
                         <TableCell>{b.name}</TableCell>
                         <TableCell>{b.borrowedDate}</TableCell>
-                        <TableCell>${b.amount}</TableCell>
+                        <TableCell>₱{b.amount}</TableCell>
+                        <TableCell>₱{b.interestAmount}</TableCell>
                         <TableCell>
                           <Chip label={b.status} color={b.status === "Paid" ? "success" : "warning"} variant="outlined" sx={{ fontWeight: 600 }} />
                         </TableCell>
                         <TableCell>{b.address}</TableCell>
-                        <TableCell>{b.contact}</TableCell>
+                        <TableCell>0{b.contact}</TableCell>
                         <TableCell>
                           <Stack direction="row" spacing={0}>
                             <Tooltip title="View">
-                              <IconButton size="small" sx={{ color: "#4382f8" }}>
+                              <IconButton onClick={() => handleEditClick(b.transactionNumber)} size="small" sx={{ color: "#4382f8" }}>
                                 <Visibility />
                               </IconButton>
                             </Tooltip>
-                            <Tooltip title="Edit">
-                              <IconButton onClick={handleEditClick} size="small" sx={{ color: "#ecad19ff" }}>
+                            <Tooltip title="Edit" sx={{display: b.status === "Paid"? "none":"flex"}}>
+                              <IconButton   onClick={() => handleEditClick(b.transactionNumber)} size="small" sx={{ color: "#ecad19ff",display: b.status === "Paid"? "none":"flex" }}>
                                 <Edit />
                               </IconButton>
                             </Tooltip>
@@ -265,8 +289,8 @@ finally{
                 <TextField label="Borrowed Date" type="date" value={newBorrower.borrowedDate} onChange={(e) => setNewBorrower({ ...newBorrower, borrowedDate: e.target.value })} InputLabelProps={{ shrink: true }} fullWidth size="small" />
                 <TextField label="Address" value={newBorrower.address} onChange={(e) => setNewBorrower({ ...newBorrower, address: e.target.value })} fullWidth size="small" />
                 <TextField label="Contact Number" value={newBorrower.contact} onChange={(e) => setNewBorrower({ ...newBorrower, contact: e.target.value })} fullWidth size="small" />
-                <TextField label="Amount" type="number" value={newBorrower.amount} onChange={(e) => setNewBorrower({ ...newBorrower, amount: e.target.value })} fullWidth size="small" />
-                    <TextField label="Number Of Payment" type="number" value={newBorrower.amount} onChange={(e) => setNewBorrower({ ...newBorrower, amount: e.target.value })} fullWidth size="small" />
+                <TextField label="Amount" type="number" value={newBorrower.amount} onChange={(e) => handleCompute(e.target.value)} fullWidth size="small" />
+                    <TextField disabled label="Interest Ammount" type="number" value={newBorrower.interestAmount} fullWidth size="small" />
                 <Stack direction="row" spacing={2} justifyContent="flex-end">
                   <Button variant="outlined" onClick={handleModalClose} sx={{ color: "white", backgroundColor: "#4b4b4bff" }}>Cancel</Button>
                   <Button variant="contained" color="success" onClick={handleSaveBorrower}>Save</Button>

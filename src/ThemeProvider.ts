@@ -1,35 +1,27 @@
 import { createTheme } from "@mui/material/styles";
 
-// Custom theme colors for Money & Savings
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#fefefeff", // deep green for savings/money
+      main: "#2e7d32", // dark green
     },
     secondary: {
-      main: "#f9a825", // gold/yellow for lending/money
+      main: "#f9a825", // gold
     },
     background: {
-      default: "#f5f5f5", // light grey background
-      paper: "#ffffff",    // paper background
+      default: "#f5f5f5",
+      paper: "#ffffff",
     },
     text: {
-      primary: "#2e7d32", // dark green for text
+      primary: "#2e7d32",
       secondary: "#616161",
     },
   },
   typography: {
     fontFamily: "'Roboto', sans-serif",
-    h5: {
-      fontWeight: 700,
-      color: "white",
-    },
-    body2: {
-      color: "#616161",
-    },
-    button: {
-      textTransform: "none", // keep button text normal case
-    },
+    h5: { fontWeight: 700, color: "white" },
+    body2: { color: "#616161" },
+    button: { textTransform: "none" },
   },
   components: {
     MuiButton: {
@@ -41,9 +33,34 @@ const theme = createTheme({
       },
     },
     MuiTextField: {
+      defaultProps: {
+        variant: "outlined", // ensure outlined style
+      },
+    },
+    MuiOutlinedInput: {
       styleOverrides: {
         root: {
           borderRadius: 8,
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#2e7d32",
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#2e7d32",
+            borderWidth: 2,
+          },
+        },
+        notchedOutline: {
+          borderColor: "#616161",
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: "#616161", // default label color
+          "&.Mui-focused": {
+            color: "#2e7d32", // label color when focused
+          },
         },
       },
     },

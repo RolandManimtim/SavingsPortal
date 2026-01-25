@@ -23,7 +23,7 @@ const App: React.FC = () => {
       path="borrowersList"
       element={<BorrowersListPage/>}/>
       <Route
-      path="borrowersDetails"
+      path="borrowersDetails/:transactionNo"
       element={<BorrowerDetailPage/>}/>
     </Routes>
    

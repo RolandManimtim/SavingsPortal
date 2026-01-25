@@ -1,11 +1,12 @@
 import type { Borrower, CreateBorrowerPayload } from "../../Interface/interface";
 
 // src/services/borrowersService.ts
-//const API_BASE_URL = "https://localhost:7263";https://rbmanimtim.bsite.net/
+//const API_BASE_URL = "https://localhost:44365";
 const API_BASE_URL = "https://rbmanimtim.bsite.net";
 
 export const getBorrowers = async (page = 1, pageSize = 10) => {
   try {
+    console.log(API_BASE_URL,"log me");
     const response = await fetch(`${API_BASE_URL}/api/GoogelSheet/borrowers?page=${page}&pageSize=${pageSize}`);
     if (!response.ok) {
       const err = await response.json();
@@ -25,7 +26,7 @@ const payload: CreateBorrowerPayload = {
 ...borrower,
 createdBy: "Roland B. Manimtim" // Replace with actual logged-in user
 };
-
+console.log("Payload sent to API:", JSON.stringify(payload, null, 2));
 
 const res = await fetch(`${API_BASE_URL}/api/GoogelSheet/borrowers`, {
   method: "POST",
@@ -44,4 +45,20 @@ if (!res.ok) {
 console.error("Error adding borrower:", error);
 alert("Failed to add borrower. Please try again.");
 }
+};
+
+export const getBorrowersByTransactionNo = async (transactionNo: string) => {
+  try {
+    console.log(API_BASE_URL,"log me");
+    const response = await fetch(`${API_BASE_URL}/api/GoogelSheet/borrowerByTransactionNo?transactionNo=${transactionNo}`);
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.message || "Failed to fetch borrowers");
+    }
+    const data = await response.json();
+    return data; // expected: array of borrowers
+  } catch (error) {
+    console.error("getBorrowers error:", error);
+    return [];
+  }
 };

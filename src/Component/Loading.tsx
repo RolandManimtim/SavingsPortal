@@ -5,7 +5,7 @@ interface LoadingScreenProps {
 message?: string;
 }
 
-const LoadingScreen: React.FC<LoadingScreenProps> = ({ message = "Loading..." }) => {
+const LoadingScreen: React.FC<LoadingScreenProps> = ({ message }) => {
 return (
 <Box
 sx={{
