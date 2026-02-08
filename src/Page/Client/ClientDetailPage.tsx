@@ -123,7 +123,7 @@ const [pagination, setPagination] = useState<Pagination>({
         const params = new URLSearchParams({
   page: (page + 1).toString(), // API page starts at 1
   pageSize: rowsPerPage.toString(),
-  nameFilter: "" ,      // empty string if undefined
+  nameFilter: transactionNo || "",      // empty string if undefined
   statusFilter: "",  // empty string if undefined
   fromDate: "",
   toDate:  "",
