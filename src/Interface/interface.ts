@@ -7,6 +7,7 @@ address: string;
 contact: string;
 interestAmount: number | string ;
 transactionNumber: string;
+clientCode: string | undefined;
 }
 
 // Payload for creating a borrower, includes createdBy
@@ -51,4 +52,13 @@ capital:number;
 collections: number;
 interestEarned:number;
 loan: number;
+}
+
+export interface Client {
+address: string;
+clientCode: string; // format: YYYY-MM-DD
+clientName:  string ;
+status: "Active"| "InActive";
+contactNumber: string;
+registeredDate: string ;
 }

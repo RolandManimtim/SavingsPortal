@@ -40,7 +40,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({  children }) => {
   const handleSubMenuClick = (subItem: string) => {
     setAnchorEl(null);
     if (subItem === "borrowersList") {
-      navigate("/borrowersList");
+      navigate("/client");
       setActiveMenu("Money Lending");
     }
     // Add other subitems here
@@ -76,7 +76,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({  children }) => {
         transformOrigin={{ vertical: "top", horizontal: "left" }}
       >
         <MenuItem onClick={() => handleSubMenuClick("borrowersList")} >
-          <People fontSize="small" sx={{ mr: 1 }} /> Borrowers
+          <People fontSize="small" sx={{ mr: 1 }} /> Client
         </MenuItem>
         {/* Add more subitems here */}
       </Menu>

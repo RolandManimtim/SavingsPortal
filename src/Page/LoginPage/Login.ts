@@ -1,8 +1,9 @@
  //const API_BASE_URL = "https://localhost:44365";
-const API_BASE_URL = "https://rbmanimtim.bsite.net";
+const API_BASE_URL = import.meta.env.VITE_API_ENDPOINT;
 
 export const loginUser = async (email: string, password: string) => {
   try {
+    console.log(API_BASE_URL, "test logIn");
     const response = await fetch(`${API_BASE_URL}/api/GoogelSheet/login`, {
       method: "POST",
       headers: {

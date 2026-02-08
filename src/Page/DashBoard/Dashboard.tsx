@@ -35,7 +35,7 @@ const data = [
 const MyusersName = localStorage.getItem("userName") || "";
 const Dashboard: React.FC = () => {
   // const API_BASE_URL = "https://localhost:44365";
-  const API_BASE_URL = "https://rbmanimtim.bsite.net"
+  const API_BASE_URL = import.meta.env.VITE_API_ENDPOINT;
 const [dashboardDetails, setDashboardDetails] = useState<DashboardEtails>({
   activeClient: 0,
   capital: 0,

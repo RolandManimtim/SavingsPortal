@@ -13,9 +13,10 @@ import {
   TableBody,
   IconButton,
   MenuItem,
-  Chip
+  Chip,
+  Tooltip
 } from "@mui/material"
-import { Save } from "lucide-react";
+import { Save , Printer} from "lucide-react";
 import DashboardLayout from "../DashBoard/DashboardLayout";
 import type { BorrowerData, BorrowerDetails } from "../../Interface/interface";
 import LoadingScreen from "../../Component/Loading";
@@ -25,9 +26,11 @@ import Swal from "sweetalert2";
 
 
 const BorrowerDetailPage: React.FC = () => {
+  
   const { transactionNo } = useParams<{ transactionNo: string }>();
    //const API_BASE_URL = "https://localhost:44365";
-  const API_BASE_URL = "https://rbmanimtim.bsite.net"
+  const API_BASE_URL = import.meta.env.VITE_API_ENDPOINT;
+  console.log(API_BASE_URL, "test")
  const [borrowerData, setBorrowerData] = useState<BorrowerData>({
   borrowerName: "",
   borrowedDate: "",
@@ -217,8 +220,111 @@ console.log(err)
   const navigate = useNavigate();
 const handleBackClick = () => {
     
-   navigate(`/borrowersList`);
+   navigate(-1);
   };
+const handlePrintReceipt = (p: any) => {
+  const receiptWindow = window.open("", "_blank", "width=800,height=600");
+
+  if (!receiptWindow) return;
+
+  receiptWindow.document.write(`
+    <html>
+      <head>
+        <title>Payment Receipt</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+          }
+          .receipt {
+            max-width: 500px;
+            margin: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+          }
+          .title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+          }
+          .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+          }
+          .divider {
+            border-top: 1px dashed #999;
+            margin: 15px 0;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="receipt">
+          <div class="title">PAYMENT RECEIPT</div>
+
+          <div class="row">
+            <span>Borrower:</span>
+            <span>${borrowerData.borrowerName}</span>
+          </div>
+
+          <div class="row">
+            <span>Transaction No:</span>
+            <span>${borrowerData.transactionNo}</span>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row">
+  <span>Amount Borrowed:</span>
+  <span>₱${Number(borrowerData.begginingBalance).toLocaleString()}</span>
+</div>
+
+<div class="row">
+  <span>Interest Amount:</span>
+  <span>₱${Number(borrowerData.interestAmount).toLocaleString()}</span>
+</div>
+
+<div class="row">
+  <span>Total Amount:</span>
+  <span>₱${(Number(borrowerData.begginingBalance) + Number(borrowerData.interestAmount)).toLocaleString()}</span>
+</div>
+
+
+          <div class="row">
+            <span>Date Paid:</span>
+            <span>${p.actualDatePaid}</span>
+          </div>
+<div class="row">
+  <span>Amount Paid:</span>
+  <span>₱${Number(p.actualAmountToPaid).toLocaleString()}</span>
+</div>
+
+<div class="row">
+  <span>Remaining Balance:</span>
+  <span>₱${Number(borrowerData.endingBalance).toLocaleString()}</span>
+</div>
+
+
+          <div class="divider"></div>
+
+          <div style="text-align:center; margin-top:20px;">
+            Thank you for your payment.
+          </div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            window.print();
+          }
+        </script>
+      </body>
+    </html>
+  `);
+
+  receiptWindow.document.close();
+};
 
   return (
     <DashboardLayout userName="Roland Manimtim">
@@ -256,7 +362,7 @@ const handleBackClick = () => {
                 size="small"
               />
               <TextField
-              disabled={borrowerData.status ==="Paid"}
+              disabled
                 label="Borrower Name"
                 value={borrowerData?.borrowerName ?? ""}
                 onChange={(e) => handleBorrowerChange("borrowerName", e.target.value)}
@@ -264,10 +370,10 @@ const handleBackClick = () => {
                 size="small"
               />
               <TextField
-              disabled={borrowerData.status ==="Paid"}
+              disabled
                 label="Borrowed Date"
                 type="date"
-                value={formatDateForInput1(borrowerData?.borrowedDate)}
+                value={formatDateForInput(borrowerData?.borrowedDate)}
                 onChange={(e) => handleBorrowerChange("borrowedDate", e.target.value)}
                 InputLabelProps={{ shrink: true }}
                 fullWidth
@@ -312,22 +418,7 @@ const handleBackClick = () => {
                 <MenuItem value="Paid">Paid</MenuItem>
                 <MenuItem value="Overdue">Overdue</MenuItem>
               </TextField>
-              <TextField
-              disabled={borrowerData.status ==="Paid"}
-                label="Address"
-                value={borrowerData?.address ?? ""}
-                onChange={(e) => handleBorrowerChange("address", e.target.value)}
-                fullWidth
-                size="small"
-              />
-              <TextField
-              disabled={borrowerData.status ==="Paid"}
-                label="Contact"
-                value={borrowerData?.contact ?? ""}
-                onChange={(e) => handleBorrowerChange("contact", e.target.value)}
-                fullWidth
-                size="small"
-              />
+            
             <TextField
   disabled
   label="Ending Balance"
@@ -437,9 +528,45 @@ const handleBackClick = () => {
                     <Chip label={p.isOverDue} color={ p.isOverDue === "No" ? "success": "warning"} variant="outlined" sx={{ fontWeight: 600 }} />
                   </TableCell>
                   <TableCell>
-                    <IconButton color="success" onClick={() => handleUpdatePayment(p)} sx={{display: p.status ==="Paid" || borrowerData.status === "Paid"? "none":"flex"}}>
-                      <Save />
-                    </IconButton>
+                   <Box
+  sx={{
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 0
+  }}
+>
+  <Tooltip title="Save" arrow>
+  <IconButton
+    color="success"
+    onClick={() => handleUpdatePayment(p)}
+    sx={{
+      display:
+        p.status === "Paid" || borrowerData.status === "Paid"
+          ? "none"
+          : "flex"
+    }}
+  >
+    <Save />
+  </IconButton>
+</Tooltip>
+  <Tooltip title="Print Receipt" arrow>
+  <IconButton
+    color="info"
+    onClick={() => handlePrintReceipt(p)}
+    sx={{
+      display:
+        p.status === "Paid" || borrowerData.status === "Paid"
+          ? "flex"
+          : "none"
+    }}
+  >
+    <Printer />
+  </IconButton>
+</Tooltip>
+</Box>
+
+                    
                   </TableCell>
                 </TableRow>
               ))}

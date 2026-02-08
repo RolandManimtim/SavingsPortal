@@ -6,6 +6,9 @@ import AddBorrowerPage from "./Page/Borrowers/AddBorrowers";
 import BorrowersListPage from "./Page/Borrowers/BorrowersList";
 import BorrowerDetailPage from "./Page/Borrowers/BorrowerDetailPage";
 
+import ClientDetailPage from "./Page/Client/ClientDetailPage";
+import ClientistPage from "./Page/Client/ClientList";
+
 const App: React.FC = () => {
 
   return (
@@ -25,6 +28,12 @@ const App: React.FC = () => {
       <Route
       path="borrowersDetails/:transactionNo"
       element={<BorrowerDetailPage/>}/>
+      <Route
+      path="client"
+      element={<ClientistPage/>}/>
+       <Route
+      path="clientDetails/:transactionNo"
+      element={<ClientDetailPage/>}/>
     </Routes>
    
   );

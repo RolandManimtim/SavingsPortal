@@ -1,6 +1,9 @@
-import type { Borrower, CreateBorrowerPayload } from "../../Interface/interface";
+
 
 // src/services/borrowersService.ts
+
+import type { Client } from "../../Interface/interface";
+
 //const API_BASE_URL = "https://localhost:44365";
 const API_BASE_URL = import.meta.env.VITE_API_ENDPOINT;
 
@@ -20,19 +23,15 @@ export const getBorrowers = async (page = 1, pageSize = 10) => {
   }
 };
 
-export const createBorrower = async (borrower: Borrower, clientName: string): Promise<void> => {
+export const createClient = async (borrower: Client): Promise<void> => {
 try {
-const payload: CreateBorrowerPayload = {
-...borrower,
-name:clientName,
-createdBy: "Roland B. Manimtim" // Replace with actual logged-in user
-};
-console.log("Payload sent to API:", JSON.stringify(payload, null, 2));
 
-const res = await fetch(`${API_BASE_URL}/api/GoogelSheet/borrowers`, {
+console.log("Payload sent to API:", JSON.stringify(borrower, null, 2));
+
+const res = await fetch(`${API_BASE_URL}/api/GoogelSheet/client`, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload),
+  body: JSON.stringify(borrower),
 });
 
 console.log(res, "ts res");
