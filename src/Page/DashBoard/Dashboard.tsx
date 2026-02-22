@@ -86,7 +86,7 @@ const [dashboardDetails, setDashboardDetails] = useState<DashboardEtails>({
         {/* Only show dashboard content if active menu is Dashboard */}
         
           <Stack direction={{ xs: "column", sm: "row" }} spacing={3} mb={3}>
-            <Paper sx={{ flex: 1, p: 3, borderRadius: 3 }}>
+            <Paper sx={{ flex: 1, p: 3, borderRadius: 3 }} >
               <Stack direction="row" spacing={2} alignItems="center">
                 <Avatar sx={{ bgcolor: "rgba(46,125,50,0.2)" }}>
                   <User color="#2e7d32" />

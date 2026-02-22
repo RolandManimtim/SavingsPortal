@@ -14,7 +14,8 @@ import {
   IconButton,
   MenuItem,
   Chip,
-  Tooltip
+  Tooltip,
+  Modal
 } from "@mui/material"
 import { Save , Printer} from "lucide-react";
 import DashboardLayout from "../DashBoard/DashboardLayout";
@@ -23,6 +24,7 @@ import LoadingScreen from "../../Component/Loading";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
   import { useNavigate } from "react-router-dom";
+import { number } from "framer-motion";
 
 
 const BorrowerDetailPage: React.FC = () => {
@@ -110,8 +112,7 @@ const handlePaymentChange = (
     setBorrowerData({ ...borrowerData, [field]: value });
   };
 
-useEffect(() => {
-  const fetchBorrower = async () => {
+   const fetchBorrower = async () => {
     try {
       setloading(true)
       const response = await fetch(`${API_BASE_URL}/api/GoogelSheet/borrowerByTransactionNo?transactionNo=${transactionNo}`);
@@ -132,6 +133,8 @@ useEffect(() => {
       setloading(false)
     }
   };
+useEffect(() => {
+ 
 
   fetchBorrower();
 }, []);
@@ -139,11 +142,11 @@ useEffect(() => {
 
 
 
-  useEffect(() => {
-    if (borrowerData) {
-      console.log("UPDATED BORROWER:", borrowerData);
-    }
-  }, [borrowerData]);
+  // useEffect(() => {
+  //   if (borrowerData) {
+  //     console.log("UPDATED BORROWER:", borrowerData);
+  //   }
+  // }, [borrowerData]);
 
   // Helper to format date for type="date" inputs
  const formatDateForInput = (dateStr?: string) => {
@@ -326,6 +329,83 @@ const handlePrintReceipt = (p: any) => {
   receiptWindow.document.close();
 };
 
+  const [openModal, setOpenModal] = useState(false);
+    const handleModalClose = () => setOpenModal(false);
+
+
+ const handleSaveBorrower = async () => {
+try {
+    handleModalClose();
+    setSaving(true);
+
+// setSaving(true);
+const newBalance =
+  Number(borrowerData.begginingBalance) + additionalAmount;
+const unpaidDetails = borrowerData.borrowerDetails.filter(
+  (item: any) => item.status === "Unpaid"
+);
+const cleanTransactionNo = borrowerData.transactionNo.replace(/\s+/g, '');
+const res = await fetch(
+  `${API_BASE_URL}/api/GoogelSheet/topUp?name=${borrowerData.borrowerName}
+  &transactionNo=${cleanTransactionNo}
+  &newBegbal=${newBalance}
+  &newInterestAmount=${newBalance * 0.2}`,
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(unpaidDetails)
+  }
+);
+setBorrowerData(prev => {
+  const updated = {
+    ...prev,
+    begginingBalance: newBalance.toString(),
+    interestAmount: (newBalance * 0.2).toString(),
+  };
+
+  // send to API here
+  fetch(`${API_BASE_URL}/api/GoogelSheet/update`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updated),
+  });
+
+  return updated;
+});
+await fetchBorrower();
+
+
+  
+Swal.fire({
+  icon: "success",
+  title: "Updated!",
+  text: "Payment sched updated successfully.",
+  timer: 2000,
+  showConfirmButton: false,
+}).then(() => {
+  // refresh the page after the alert disappears
+  window.location.reload();
+});
+
+
+} catch (error) {
+   Swal.fire({
+          icon: "error",
+          title: "Failed!",
+          text: "Something went wrong!",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+console.error("Failed to save borrower:", error);
+alert("Failed to save borrower. Please try again.");
+}
+finally{
+    setSaving(false);
+}
+};
+
+const [additionalAmount, setAdditionalAmount] = useState(0 );
+
   return (
     <DashboardLayout userName="Roland Manimtim">
       {loading && <LoadingScreen message="Fetching data. Please wait..." />}
@@ -384,7 +464,6 @@ const handlePrintReceipt = (p: any) => {
                 label="Beggining Balance"
                 type="number"
                 value={borrowerData?.begginingBalance ?? ""}
-                onChange={(e) => handleBorrowerChange("begginingBalance", e.target.value)}
                 fullWidth
                 size="small"
               />
@@ -459,7 +538,12 @@ const handlePrintReceipt = (p: any) => {
             <Typography variant="h6" fontWeight={700}>
               Payment History
             </Typography>
-            
+             <Box>
+                        <Button variant="contained" color="success" sx={{ borderRadius: 2, textTransform: "none", ml:2}} 
+                      onClick={() => setOpenModal(true)}  >
+                          + Top-up
+                        </Button>
+                        </Box>
           </Stack>
           <Table>
             <TableHead>
@@ -573,6 +657,25 @@ const handlePrintReceipt = (p: any) => {
             </TableBody>
           </Table>
         </Paper>
+
+        <Modal open={openModal} onClose={handleModalClose}>
+            <Paper sx={{ p: 4, width: { xs: "90%", sm: 400 }, mx: "auto", mt: "10%", borderRadius: 3, outline: "none" }}>
+              <Typography variant="h6" fontWeight={700} mb={2} color="#4caf50">New Top up</Typography>
+              <Stack spacing={2}>
+                <TextField label="Additional Amount" value={additionalAmount === 0 ? "":additionalAmount} 
+                onChange={(e) => setAdditionalAmount(Number(e.target.value))} fullWidth size="small" />
+                <TextField disabled label="New Amount Borrowed" type="number" 
+                value={Number(borrowerData.begginingBalance) + additionalAmount} 
+                 InputLabelProps={{ shrink: true }} fullWidth size="small" />
+                <TextField disabled label="New Interest Amount" value={(Number(borrowerData.begginingBalance) + additionalAmount) * 0.2}  fullWidth size="small" />
+                
+                <Stack direction="row" spacing={2} justifyContent="flex-end">
+                  <Button variant="outlined" onClick={handleModalClose} sx={{ color: "white", backgroundColor: "#4b4b4bff" }}>Cancel</Button>
+                  <Button variant="contained" color="success" onClick={handleSaveBorrower}>Save</Button>
+                </Stack>
+              </Stack>
+            </Paper>
+          </Modal>
       </Box>
     </DashboardLayout>
   );
