@@ -24,7 +24,6 @@ import LoadingScreen from "../../Component/Loading";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
   import { useNavigate } from "react-router-dom";
-import { number } from "framer-motion";
 
 
 const BorrowerDetailPage: React.FC = () => {
@@ -345,7 +344,7 @@ const unpaidDetails = borrowerData.borrowerDetails.filter(
   (item: any) => item.status === "Unpaid"
 );
 const cleanTransactionNo = borrowerData.transactionNo.replace(/\s+/g, '');
-const res = await fetch(
+await fetch(
   `${API_BASE_URL}/api/GoogelSheet/topUp?name=${borrowerData.borrowerName}
   &transactionNo=${cleanTransactionNo}
   &newBegbal=${newBalance}
