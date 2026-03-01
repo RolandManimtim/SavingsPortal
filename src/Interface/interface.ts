@@ -44,6 +44,7 @@ isOverDue: string;
 schedulePaymentDate: string;
 status: string;
 transactionNo: string;
+endingBalance: string;
 }
 
 export interface DashboardEtails {
@@ -61,4 +62,10 @@ clientName:  string ;
 status: "Active"| "InActive";
 contactNumber: string;
 registeredDate: string ;
+}
+
+export interface BarChartDetails {
+month: string;
+collection: string;
+loan: string;
 }

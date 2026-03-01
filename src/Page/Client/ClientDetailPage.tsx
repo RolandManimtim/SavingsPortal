@@ -414,7 +414,7 @@ const hasUnpaid = borrowersData?.length > 0 &&
             <Paper sx={{ p: 4, width: { xs: "90%", sm: 400 }, mx: "auto", mt: "10%", borderRadius: 3, outline: "none" }}>
               <Typography variant="h6" fontWeight={700} mb={2} color="#4caf50">Add</Typography>
               <Stack spacing={2}>
-                <TextField sx={{display:isForRenewal? "none":"flex"}} label="Borrowed Date" type="date" value={newBorrower.borrowedDate} onChange={(e) => setNewBorrower({ ...newBorrower, borrowedDate: e.target.value })} InputLabelProps={{ shrink: true }} fullWidth size="small" />
+                <TextField sx={{display:"flex"}} label="Borrowed Date" type="date" value={newBorrower.borrowedDate} onChange={(e) => setNewBorrower({ ...newBorrower, borrowedDate: e.target.value })} InputLabelProps={{ shrink: true }} fullWidth size="small" />
                 <TextField label="Amount" type="number" value={newBorrower.amount} onChange={(e) => handleCompute(e.target.value)} fullWidth size="small" />
                     <TextField disabled label="Interest Ammount" type="number" value={newBorrower.interestAmount} fullWidth size="small" />
                 <Stack direction="row" spacing={2} justifyContent="flex-end">

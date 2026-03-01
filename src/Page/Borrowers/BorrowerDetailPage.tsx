@@ -50,6 +50,8 @@ const BorrowerDetailPage: React.FC = () => {
 
   const handleUpdatePayment = async (dto: BorrowerDetails) => {
     try{
+      const endingBalance = Number(borrowerData.endingBalance) - Number(dto.actualAmountToPaid)
+      dto.endingBalance = endingBalance.toString();
 setSaving(true);
    const res = await fetch(`${API_BASE_URL}/api/GoogelSheet/updatePayment`, {
   method: "PUT",
@@ -267,7 +269,7 @@ const handlePrintReceipt = (p: any) => {
           <div class="title">PAYMENT RECEIPT</div>
 
           <div class="row">
-            <span>Borrower:</span>
+            <span>Client Name:</span>
             <span>${borrowerData.borrowerName}</span>
           </div>
 
@@ -305,7 +307,7 @@ const handlePrintReceipt = (p: any) => {
 
 <div class="row">
   <span>Remaining Balance:</span>
-  <span>₱${Number(borrowerData.endingBalance).toLocaleString()}</span>
+  <span>₱${Number(p.endingBalance).toLocaleString()}</span>
 </div>
 
 
@@ -420,11 +422,7 @@ const [additionalAmount, setAdditionalAmount] = useState(0 );
          variant="contained"  sx={{ borderRadius: 2, textTransform: "none", backgroundColor:"white", color:"black" }} >
                        Back
                      </Button>
-                      <Button 
-                      onClick={() => handleUpdate()}
-                      variant="contained" color="success" sx={{ml:2, borderRadius: 2, textTransform: "none" }} >
-                       Update
-                     </Button>
+                      
                      </Box>
         </Stack>
         {/* Borrower Form */}
@@ -459,7 +457,7 @@ const [additionalAmount, setAdditionalAmount] = useState(0 );
                 size="small"
               />
               <TextField
-              disabled={borrowerData.status ==="Paid"}
+              disabled
                 label="Beggining Balance"
                 type="number"
                 value={borrowerData?.begginingBalance ?? ""}
@@ -537,7 +535,7 @@ const [additionalAmount, setAdditionalAmount] = useState(0 );
             <Typography variant="h6" fontWeight={700}>
               Payment History
             </Typography>
-             <Box>
+             <Box sx={{display: borrowerData.status === "Unpaid" ? "flex": "none"}}>
                         <Button variant="contained" color="success" sx={{ borderRadius: 2, textTransform: "none", ml:2}} 
                       onClick={() => setOpenModal(true)}  >
                           + Top-up
