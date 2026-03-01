@@ -173,53 +173,53 @@ const formatDateForInput1 = (dateStr?: string) => {
     if (isNaN(d.getTime())) return "";
     return d.toISOString().split("T")[0];
   };
-  const handleUpdate = async () => {
-    try{
-      setSaving(true)
-  const res = await fetch(`${API_BASE_URL}/api/GoogelSheet/update`, {
-  method: "PUT",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(borrowerData),
-});
+//   const handleUpdate = async () => {
+//     try{
+//       setSaving(true)
+//   const res = await fetch(`${API_BASE_URL}/api/GoogelSheet/update`, {
+//   method: "PUT",
+//   headers: { "Content-Type": "application/json" },
+//   body: JSON.stringify(borrowerData),
+// });
 
-if (res.ok) {
+// if (res.ok) {
      
 
-      const response = await fetch(`${API_BASE_URL}/api/GoogelSheet/borrowerByTransactionNo?transactionNo=${transactionNo}`);
+//       const response = await fetch(`${API_BASE_URL}/api/GoogelSheet/borrowerByTransactionNo?transactionNo=${transactionNo}`);
 
-      if (!response.ok) throw new Error("Failed to fetch borrower");
+//       if (!response.ok) throw new Error("Failed to fetch borrower");
 
-      const json = await response.json();
-      console.log("Raw API response:", json);
+//       const json = await response.json();
+//       console.log("Raw API response:", json);
 
-      // Unwrap the nested borrowerData object
-      const data: BorrowerData = json.borrowerData ?? json; 
-      setBorrowerData(data);
+//       // Unwrap the nested borrowerData object
+//       const data: BorrowerData = json.borrowerData ?? json; 
+//       setBorrowerData(data);
 
-       Swal.fire({
-        icon: "success",
-        title: "Saved!",
-        text: "Borrower data has been updated successfully.",
-        timer: 2000,
-        showConfirmButton: false,
-      });
-    } else {
-      const errorData = await res.json();
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: errorData.message || "Failed to update borrower data.",
-      });
-    }
+//        Swal.fire({
+//         icon: "success",
+//         title: "Saved!",
+//         text: "Borrower data has been updated successfully.",
+//         timer: 2000,
+//         showConfirmButton: false,
+//       });
+//     } else {
+//       const errorData = await res.json();
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: errorData.message || "Failed to update borrower data.",
+//       });
+//     }
 
-    }catch(err){
-console.log(err)
-    }
-    finally{
- setSaving(false)
-    }
+//     }catch(err){
+// console.log(err)
+//     }
+//     finally{
+//  setSaving(false)
+//     }
 
-  };
+//   };
 
   const navigate = useNavigate();
 const handleBackClick = () => {
