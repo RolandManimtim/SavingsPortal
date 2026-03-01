@@ -109,6 +109,14 @@ const years = Array.from({ length: 8 }, (_, i) => currentYear - i);
   const [hoveredLol, setHoveredLol] = useState(false);
   const [hoveredInt, setHoveredInt] = useState(false);
 
+const chartData = barchartDetails.map(d => ({
+  month: d.month,
+  collectionValue: Number(d.collection.replace(/[^0-9.-]+/g, "")), // numeric for Bar
+  loanValue: Number(d.loan.replace(/[^0-9.-]+/g, "")),             // numeric for Bar
+  collection: d.collection, // keep formatted string for tooltip
+  loan: d.loan
+}));
+
   return (
      <DashboardLayout userName={MyusersName}  >
 {loading && <LoadingScreen message="Dashboard Loading. Please wait..." />}
@@ -344,47 +352,30 @@ const years = Array.from({ length: 8 }, (_, i) => currentYear - i);
     </Box>
   ) : (
   <ResponsiveContainer width="100%" height={300}>
-    <BarChart data={barchartDetails}>
-      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-      
-      <XAxis
-        dataKey="month"
-        tick={{ fill: "#64748b", fontSize: 12 }}
-        axisLine={{ stroke: "#cbd5e1" }}
-      />
-      
-      <YAxis
-        tick={{ fill: "#64748b", fontSize: 12 }}
-        axisLine={{ stroke: "#cbd5e1" }}
-      />
-      
-      <Tooltip
-        contentStyle={{
-          backgroundColor: "#ffffff",
-          borderRadius: "8px",
-          border: "1px solid #e2e8f0",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-        }}
-      />
+   <BarChart data={chartData}>
+  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+  <XAxis dataKey="month" tick={{ fill: "#64748b", fontSize: 12 }} axisLine={{ stroke: "#cbd5e1" }} />
+  <YAxis tick={{ fill: "#64748b", fontSize: 12 }} axisLine={{ stroke: "#cbd5e1" }} />
+  
+  <Tooltip
+    contentStyle={{
+      backgroundColor: "#ffffff",
+      borderRadius: "8px",
+      border: "1px solid #e2e8f0",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+    }}
+    formatter={(value, name, props) => {
+      // value here is the numeric one
+      // use the original formatted string from data
+      if (name === "Collection") return [props.payload.collection, name];
+      if (name === "Loan") return [props.payload.loan, name];
+      return [value, name];
+    }}
+  />
 
-      {/* Collection - Green */}
-      <Bar
-        dataKey="collection"
-        name="Collection"
-        fill="#16a34a"
-        barSize={24}
-        radius={[6, 6, 0, 0]}
-      />
-
-      {/* Loan - Red */}
-      <Bar
-        dataKey="loan"
-        name="Loan"
-        fill="#dc2626"
-        barSize={24}
-        radius={[6, 6, 0, 0]}
-      />
-    </BarChart>
+  <Bar dataKey="collectionValue" name="Collection" fill="#16a34a" barSize={24} radius={[6,6,0,0]} />
+  <Bar dataKey="loanValue" name="Loan" fill="#dc2626" barSize={24} radius={[6,6,0,0]} />
+</BarChart>
   </ResponsiveContainer>
   )}
 </Paper>
